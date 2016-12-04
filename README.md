@@ -33,7 +33,7 @@ your cancel button (the `closeModal` method exposed will take into account `onCl
 
 ##Example:
 
-*Coming soon!*
+[Simplest possible example on CodePen](https://codepen.io/4rlekin/pen/gLvdwz)
 
 ##Contribs, feature requests, PRs etc.
 It's my first ever OSS work, so i haven't figured out how to deal with such things yet.
