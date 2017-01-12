@@ -10,6 +10,10 @@ It has no dependecies outside of angular
 
 ##Install:
 
+You can either download the repo, or use npm:  
+
+`npm install --save ng-simple-modal`
+
 Just plug and play, really.
 - Add the file to your codebase
 - Put 'simple-modal' in your angular module dependencies
@@ -35,14 +39,14 @@ your cancel button (the `closeModal` method exposed will take into account `onCl
 
 [Simplest possible example on CodePen](https://codepen.io/4rlekin/pen/gLvdwz)
 
-##Contribs, feature requests, PRs etc.
+##Contribs, feature requests, PRs etc.  
 It's my first ever OSS work, so i haven't figured out how to deal with such things yet.
 But i really do appreciate any feedback, so open issues, message me and so forth; i'd be happy to make this a useful lib for many people.
 
-##License
+##License  
 MIT
 
-##Credits
+##Credits  
 I'd like to give my thanks to [icebox](https://github.com/albertosantini) from #angularjs
 for help in putting this together and lots of good advice!
 
