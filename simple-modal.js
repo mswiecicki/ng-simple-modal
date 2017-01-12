@@ -6,7 +6,7 @@ function modalService($rootScope, $window, $sce, $compile) {
 
     let modalElement;
     let close = function() {
-        throw new ReferenceError("No open modal to be closed - you cannot get water out of stone!");
+        throw new Error("No open modal to be closed - you cannot get water out of stone!");
     };
 
     // template -  which will be wrapped with modal

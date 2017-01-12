@@ -20,7 +20,7 @@ Just plug and play, really.
 ##Usage:
 
 Service exposes two methods: `open()` and `close()` which do what says on the can.
-Calling `close()` before `open()` will throw a `ReferenceError` - so don't do that.
+Calling `close()` before `open()` will throw a `Error` - so don't do that.
 
 The `open()` method accepts a configuration object with following properties:
 - `template` - HTML string being the template for the modal (bear in mind, that modal itself does not provide anything, not even background-color)
