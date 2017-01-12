@@ -9,22 +9,20 @@ function modalService($rootScope, $window, $sce, $compile) {
         throw new ReferenceError("No open modal to be closed - you cannot get water out of stone!");
     };
 
-    function open({
+    let config = {
         template = '',          // template which will be wrapped with modal
         scope = {},             // object with properties to put on modal's scope
         backdropClosing = true, // flag deciding if clicking on backdrop should close modal
         onClose = () => {}      // additional operations to execute on closing modal
-    }) {
-        // combine closing function with callback
-        close = function closeModal() {
-            if (modalElement) {
-                onClose();
-                modalElement.scope().$destroy();
-                modalElement.remove();
-            }
-        };
+    }
 
-        // prepare template
+    function open(config) {
+        let template = prepareTemplate(config.template);
+        let modalScope = setupScope(config.scope, config.onClose);
+        buildModal(template, modalScope);
+    }
+
+    function prepareTemplate(template) {
         let trustedTemplate = $sce.trustAsHtml(template);
         let wholeTemplate = `
             <div id="backdrop" ng-click="_close($event)">
@@ -44,10 +42,20 @@ function modalService($rootScope, $window, $sce, $compile) {
                 </style>
                 <div id="modal">` + trustedTemplate + `</div>
             </div>`;
+        return wholeTemplate
+    };
 
-        // create and populate scope
-        modalScope = $rootScope.$new(true);
+    function setupScope(scope, closeFn) {
+        let modalScope = $rootScope.$new(true);
         angular.merge(modalScope, scope);
+
+        close = function closeModal() {
+            if (modalElement) {
+                closeFn();
+                modalElement.scope().$destroy();
+                modalElement.remove();
+            }
+        };
         // add "internal" closing function for backdrop
         // closing from backdrop needs to ensure what was actually clicked
         // (otherwise clicking on modal would close it)
@@ -56,12 +64,15 @@ function modalService($rootScope, $window, $sce, $compile) {
                 close();
             }
         };
-        // add API function for closing modal from within
+        // and public one
         modalScope.closeModal = close;
 
-        // compile, link and add to body
-        let linkFn = $compile(wholeTemplate);
-        modalElement = linkFn(modalScope);
+        return modalScope;
+    };
+
+    function buildModal(template, scope) {
+        let linkFn = $compile(template);
+        modalElement = linkFn(scope);
         $window.document.body.appendChild(modalElement[0]);
     }
 
