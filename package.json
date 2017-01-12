@@ -1,0 +1,28 @@
+{
+  "name": "ng-simple-modal",
+  "version": "1.0.0",
+  "description": "Barebones, unopinionated modal service for angularjs 1.X written in ES2015",
+  "main": "simple-modal.js",
+  "scripts": {
+    "test": "echo \"still no tests...\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4rlekin/ng-simple-modal.git"
+  },
+  "keywords": [
+    "modal",
+    "dialog",
+    "popup",
+    "alert",
+    "ng",
+    "angularjs",
+    "angular"
+  ],
+  "author": "Marek Święcicki 2017",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/4rlekin/ng-simple-modal/issues"
+  },
+  "homepage": "https://github.com/4rlekin/ng-simple-modal#readme"
+}
