@@ -9,17 +9,14 @@ function modalService($rootScope, $window, $sce, $compile) {
         throw new ReferenceError("No open modal to be closed - you cannot get water out of stone!");
     };
 
-    let config = {
-        template = '',          // template which will be wrapped with modal
-        scope = {},             // object with properties to put on modal's scope
-        backdropClosing = true, // flag deciding if clicking on backdrop should close modal
-        onClose = () => {}      // additional operations to execute on closing modal
-    }
-
-    function open(config) {
-        let template = prepareTemplate(config.template);
-        let modalScope = setupScope(config.scope, config.onClose);
-        buildModal(template, modalScope);
+    // template -  which will be wrapped with modal
+    // object -  with properties to put on modal's scope
+    // flag - deciding if clicking on backdrop should close modal
+    // function - for additional operations to execute on closing modal
+    function open({ template = '', scope = {}, backdropClosing = true, onClose = () => {} }) {
+        let readyTemplate = prepareTemplate(template);
+        let modalScope = setupScope(scope, onClose);
+        buildModal(readyTemplate, modalScope);
     }
 
     function prepareTemplate(template) {
