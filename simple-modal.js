@@ -4,8 +4,8 @@ angular.module('simple-modal', [])
 modalService.$inject = ['$rootScope', '$window', '$sce', '$compile'];
 function modalService($rootScope, $window, $sce, $compile) {
 
-    let modalElement;
-    let close = function() {
+    let modalEl;
+    let closeFn = function() {
         throw new Error("No open modal to be closed - you cannot get water out of stone!");
     };
 
@@ -16,7 +16,10 @@ function modalService($rootScope, $window, $sce, $compile) {
     function open({ template = '', scope = {}, backdropClosing = true, onClose = () => {} }) {
         let readyTemplate = prepareTemplate(template);
         let modalScope = setupScope(scope, onClose);
-        buildModal(readyTemplate, modalScope);
+        modalEl = buildModal(readyTemplate, modalScope);
+        closeFn = generateCloseFn(modalEl, onClose);
+        attachCloseFn(modalEl, closeFn, backdropClosing);
+        showModal(modalEl);
     }
 
     function prepareTemplate(template) {
@@ -45,33 +48,42 @@ function modalService($rootScope, $window, $sce, $compile) {
     function setupScope(scope, closeFn) {
         let modalScope = $rootScope.$new(true);
         angular.merge(modalScope, scope);
-
-        close = function closeModal() {
-            if (modalElement) {
-                closeFn();
-                modalElement.scope().$destroy();
-                modalElement.remove();
-            }
-        };
-        // add "internal" closing function for backdrop
-        // closing from backdrop needs to ensure what was actually clicked
-        // (otherwise clicking on modal would close it)
-        modalScope._close = function backdropClose($event) {
-            if (backdropClosing && $event && $event.target.id === 'backdrop') {
-                close();
-            }
-        };
-        // and public one
-        modalScope.closeModal = close;
-
         return modalScope;
     };
 
+
     function buildModal(template, scope) {
         let linkFn = $compile(template);
-        modalElement = linkFn(scope);
-        $window.document.body.appendChild(modalElement[0]);
+        modalEl = linkFn(scope);
+        return modalEl;
+    };
+
+    function generateCloseFn(modalEl, callback) {
+        return function closeModal() {
+            if (modalEl) {
+                callback();
+                modalEl.scope().$destroy();
+                modalEl.remove();
+            }
+        };
+    };
+
+    function attachCloseFn(modalEl, closeFn, backdropClosing) {
+        // add public close method
+        modalEl.scope().closeModal = closeFn;
+        // add "internal" closing method for backdrop
+        // closing from backdrop needs to ensure what was actually clicked
+        // (otherwise clicking on modal would close it)
+        modalEl.scope()._close = function backdropClose($event) {
+            if (backdropClosing && $event && $event.target.id === 'backdrop') {
+                closeFn();
+            }
+        };
     }
+
+    function showModal(modalEl) {
+        $window.document.body.appendChild(modalEl[0]);
+    };
 
     return { open, close };
 };
