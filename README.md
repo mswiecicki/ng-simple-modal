@@ -1,7 +1,7 @@
 #ng-simple-modal
 
 This is an extremely simple modal service, written in ES2015 (ES6), allowing for creating and closing modal,
-with completly custom template, both from outside (controller with injected service) and inside (method exposed on modal's isolated scope).
+with completely custom template, both from outside (controller with injected service) and inside (method exposed on modal's isolated scope).
 It has no dependecies outside of angular
 
 ######Currently it supports:
@@ -44,5 +44,5 @@ MIT
 
 ##Credits
 I'd like to give my thanks to [icebox](https://github.com/albertosantini) from #angularjs
-For help in putting this together and lots of good advice!
+for help in putting this together and lots of good advice!
 
