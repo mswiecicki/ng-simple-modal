@@ -25,22 +25,22 @@ function modalService($rootScope, $window, $sce, $compile) {
     function prepareTemplate(template) {
         let trustedTemplate = $sce.trustAsHtml(template);
         let wholeTemplate = `
-            <div id="backdrop" ng-click="_close($event)">
+            <div id="nsm-backdrop" ng-click="_close($event)">
                 <style>
-                    #backdrop {
+                    #nsm-backdrop {
                         position: fixed;
                         top: 0; bottom: 0; left: 0; right: 0;
                         background-color: rgba(0,0,0,0.7);
                         z-index: 5;
                     }
-                    #modal {
+                    #nsm-modal {
                         position: fixed;
                         top: 50%; left: 50%;
                         transform: translatey(-50%) translatex(-50%);
                         z-index: 6;
                     }
                 </style>
-                <div id="modal">` + trustedTemplate + `</div>
+                <div id="nsm-modal">` + trustedTemplate + `</div>
             </div>`;
         return wholeTemplate
     };
