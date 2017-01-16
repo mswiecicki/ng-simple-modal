@@ -2,7 +2,7 @@
 
 This is an extremely simple modal service, written in ES2015 (ES6), allowing for creating and closing modal,
 with completely custom template, both from outside (controller with injected service) and inside (method exposed on modal's isolated scope).
-It has no dependecies outside of angular
+It has no dependencies outside of angular
 
 ######Currently it supports:  
 - only one modal at a time
@@ -29,13 +29,10 @@ The `open()` method accepts a configuration object with following properties:
 - `scope` - object literal containing things you'd like to put on modal's isolated scope
 - `backdropClosing` - `(defaults: true)` boolean indicating whether clicking on backdrop should close the modal
 - `onClose` - function which will be ran each time modal closes (both from backdrop or service)
+- `controller` - controller function for modal contents
 
 Also on the modal's scope is exposed API in the form of `closeModal()` method allowing you to attach it to
 your cancel button (the `closeModal` method exposed will take into account `onClose` method passed in `open`).
-
-##Example:  
-
-[Simplest possible example on CodePen](https://codepen.io/4rlekin/pen/gLvdwz)
 
 ##Declaration of Compliance to SemVer:  
 For what it's worth I'd like to promise here that I will strictly respect Semantic Versioning  

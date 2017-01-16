@@ -1,4 +1,8 @@
-##v1.0.4 - 12.01.2017 ##
+##v1.1.0 - 17.01.2017 ##
+
+- add feature of providing controller function for modal content
+- rewrite/refactor most of the code, and make modal into directive
+##v1.0.4 - 17.01.2017 ##
 
 - add this changelog, but more importantly examples/ folder  
 ##v1.0.3 - 16.01.2017 ##

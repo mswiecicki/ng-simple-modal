@@ -1,31 +1,66 @@
+var cachedCompileProvider;
 angular.module('simple-modal', [])
+.config(['$compileProvider', function($compileProvider){
+    cachedCompileProvider = $compileProvider;
+}])
 .factory('modalService', modalService);
 
 modalService.$inject = ['$rootScope', '$window', '$sce', '$compile'];
 function modalService($rootScope, $window, $sce, $compile) {
 
-    let modalEl;
-    let closeFn = function() {
-        throw new Error("No open modal to be closed - you cannot get water out of stone!");
-    };
-
-    // template -  which will be wrapped with modal
-    // object -  with properties to put on modal's scope
-    // flag - deciding if clicking on backdrop should close modal
-    // function - for additional operations to execute on closing modal
-    function open({ template = '', scope = {}, backdropClosing = true, onClose = () => {} }) {
-        let readyTemplate = prepareTemplate(template);
-        let modalScope = setupScope(scope, onClose);
-        modalEl = buildModal(readyTemplate, modalScope);
-        closeFn = generateCloseFn(modalEl, onClose);
-        attachCloseFn(modalEl, closeFn, backdropClosing);
+    /** The open() gets configuration object with optional properties:
+    * template - which will be wrapped with modal
+    * scope - object with properties to put on modal's scope
+    * backdropClosing - flag deciding if clicking on backdrop should close modal
+    * onClose - callback for additional operations to execute on closing modal
+    * controller - controller function for modal contents */
+    function open({ template = '', scope = {}, backdropClosing = true, onClose = () => {}, controller = ($scope) => {} }) {
+        let modalTemplate = prepareContentsTemplate(template);
+        let modalScope = prepareScope(scope, onClose, backdropClosing);
+        let modalDDO = new ModalDDO(modalScope, controller, modalTemplate);
+        registerModalDirective(modalDDO);
+        let modalEl = buildModal();
         showModal(modalEl);
+        return {close: modalEl.scope().closeModal};
     }
 
-    function prepareTemplate(template) {
-        let trustedTemplate = $sce.trustAsHtml(template);
-        let wholeTemplate = `
-            <div id="nsm-backdrop" ng-click="_close($event)">
+    function prepareContentsTemplate(template) {
+        return $sce.trustAsHtml(template);
+    }
+
+    function prepareScope(scope, closeFn, backdropClosing) {
+        scope._onClose = closeFn;
+        scope._bckdropClosing = backdropClosing;
+        return scope;
+    }
+
+    function ModalDDO(scopeObj, controllerFn, contentsTemplate) {
+        this.restrict = 'E';
+        this.scope = {};
+        this.controller = controllerFn;
+        this.replace = false;
+        this.transclude = true;
+        this.link = function link(scope, el) {
+            // add public close method
+            scope.closeModal = function closeModal() {
+                scopeObj._onClose();
+                scope.$destroy();
+                el.remove();
+            };
+
+            // add "internal" closing method for backdrop
+            // closing from backdrop needs to ensure what was actually clicked
+            // (otherwise clicking on modal would close it)
+            scope._backdropClose = function($event) {
+                if (scopeObj._bckdropClosing && $event && $event.target.id === 'nsm-backdrop') {
+                    scope.closeModal();
+                }
+            };
+
+            angular.merge(scope, scopeObj);
+        };
+        this.template = `
+            <div id="nsm-backdrop" ng-click="_backdropClose($event)">
                 <style>
                     #nsm-backdrop {
                         position: fixed;
@@ -40,50 +75,23 @@ function modalService($rootScope, $window, $sce, $compile) {
                         z-index: 6;
                     }
                 </style>
-                <div id="nsm-modal">` + trustedTemplate + `</div>
+                <div id="nsm-modal">${contentsTemplate}</div>
             </div>`;
-        return wholeTemplate
-    };
+    }
 
-    function setupScope(scope, closeFn) {
-        let modalScope = $rootScope.$new(true);
-        angular.merge(modalScope, scope);
-        return modalScope;
-    };
+    function registerModalDirective(modalDDO) {
+        cachedCompileProvider.directive('modalWrapper', function() {
+            return modalDDO;
+        });
+    }
 
-
-    function buildModal(template, scope) {
-        let linkFn = $compile(template);
-        modalEl = linkFn(scope);
-        return modalEl;
-    };
-
-    function generateCloseFn(modalEl, callback) {
-        return function closeModal() {
-            if (modalEl) {
-                callback();
-                modalEl.scope().$destroy();
-                modalEl.remove();
-            }
-        };
-    };
-
-    function attachCloseFn(modalEl, closeFn, backdropClosing) {
-        // add public close method
-        modalEl.scope().closeModal = closeFn;
-        // add "internal" closing method for backdrop
-        // closing from backdrop needs to ensure what was actually clicked
-        // (otherwise clicking on modal would close it)
-        modalEl.scope()._close = function backdropClose($event) {
-            if (backdropClosing && $event && $event.target.id === 'nsm-backdrop') {
-                closeFn();
-            }
-        };
+    function buildModal() {
+        return $compile('<modal-wrapper></modal-wrapper>')($rootScope.$new(true));
     }
 
     function showModal(modalEl) {
         $window.document.body.appendChild(modalEl[0]);
-    };
+    }
 
-    return { open, close };
-};
+    return { open };
+}
