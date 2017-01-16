@@ -75,7 +75,7 @@ function modalService($rootScope, $window, $sce, $compile) {
         // closing from backdrop needs to ensure what was actually clicked
         // (otherwise clicking on modal would close it)
         modalEl.scope()._close = function backdropClose($event) {
-            if (backdropClosing && $event && $event.target.id === 'backdrop') {
+            if (backdropClosing && $event && $event.target.id === 'nsm-backdrop') {
                 closeFn();
             }
         };
