@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simplest possible example of simple-modal usage.</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <script src="../simple-modal.js"></script>
+
+    <style>
+        .modalContents {
+            min-width: 400px;
+            min-height: 200px;
+            background-color: white;
+            border: 1px solid #cccccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+
+</head>
+<body ng-app="app" ng-controller="main">
+
+    <h1>{{ loaded }}</h1>
+
+    <p>Lorem ipsum sit dolor... and so on and so forth</p>
+
+    <button ng-click="openModal()">Open empty modal</button>
+
+    <script type="application/javascript">
+        angular.module('app', ['simple-modal'])
+        .controller('main', function($scope, modalService) {
+            $scope.loaded = "Angular loaded!";
+
+            $scope.openModal = function openModal() {
+                let modalConfig = {
+                    template: `
+                        <div class="modalContents">
+                            <button ng-click="closeModal()">Close</button>
+                        </div>`
+                };
+                modalService.open(modalConfig);
+            }
+        });
+    </script>
+
+</body>
+</html>
