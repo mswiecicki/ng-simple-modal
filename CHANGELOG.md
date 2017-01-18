@@ -1,3 +1,8 @@
+##v1.1.1 - 18.01.2017 ##
+
+- i messed up publishing in last two versions and got so confused
+that probably everything is broken (npm-wise)
+well, live and learn i guess, now should be okay
 ##v1.1.0 - 17.01.2017 ##
 
 - add feature of providing controller function for modal content
