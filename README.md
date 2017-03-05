@@ -34,6 +34,12 @@ The `open()` method accepts a configuration object with following properties:
 Also on the modal's scope is exposed API in the form of `closeModal()` method allowing you to attach it to
 your cancel button (the `closeModal` method exposed will take into account `onClose` method passed in `open`).
 
+##Live examples:
+
+- [Simplest possible](https://plnkr.co/edit/s6qSGV16pVgSxBuBPJGL?p=preview)
+- [With onClose callback](https://plnkr.co/edit/t5UCOnqNSIiOUNr4UFHM?p=preview)
+- [Using a component](https://plnkr.co/edit/koyALxbqMnzBwYoBlQ6W?p=preview)
+
 ##Declaration of Compliance to SemVer:  
 For what it's worth I'd like to promise here that I will strictly respect Semantic Versioning  
 understood as follows:  
