@@ -61,6 +61,7 @@
 
                 controllerFn($scope);
             }
+            this.controller.$inject = ["$scope", "$element"];
             this.replace = false;
             this.transclude = true;
             this.template = `
