@@ -42,8 +42,8 @@
             this.scope = {};
             this.controller = function($scope, $element) {
                 // add public close method
-                $scope.closeModal = function closeModal() {
-                    scopeObj._onClose();
+                $scope.closeModal = function closeModal(answer) {
+                    scopeObj._onClose(answer);
                     $scope.$destroy();
                     $element.remove();
                 };
